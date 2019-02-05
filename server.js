@@ -34,7 +34,7 @@ app.get("/scrape", function(req, res) {
     var $ = cheerio.load(response.data);
 
     // Now grab every jobsearch within the td tag - yeah right!!!
-    $("div.'jobsearch-SerpJobCard row result clickcard vjs-highlight'").each(function(i, element) {
+    $("div#resultsColTopSpace").each(function(i, element) {
       // Save an empty result object
       var result = {};
 
