@@ -1,34 +1,28 @@
 var express = require("express");
 // var logger = require("morgan");
 var mongoose = require("mongoose");
+var expresshbs = require("express-handlebars");
 
 // scraping tools & Axios is a promised-based http library
 var axios = require("axios");
 var cheerio = require("cheerio");
 
-// Require all models
 var db = require("./models");
 
+// Initialize server variables and middleware
 var PORT = 3000;
 
-// Initialize Express
 var app = express();
-
-// Use morgan logger for logging requests
 // app.use(logger("dev"));
-// Parse request body as JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// Make public a static folder
 app.use(express.static("public"));
+app.engine("handlebars", expresshbs({ defaultLayout: 'main' }));
 
 // Connect to the Mongo DB
-// mongoose.connect("mongodb://localhost/scraper", { useNewUrlParser: true });
-
-// If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scraper";
-
-mongoose.connect(MONGODB_URI);
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/scraper"
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
+mongoose.set("useFindAndModify",false);
 
 // Routes
 
@@ -39,8 +33,8 @@ app.get("/scrape", function(req, res) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
     var $ = cheerio.load(response.data);
 
-    // Now, we grab every jobsearch class within an article tag, and do the following:
-    $("td").each(function(i, element) {
+    // Now grab every jobsearch within the td tag - yeah right!!!
+    $("div.'jobsearch-SerpJobCard row result clickcard vjs-highlight'").each(function(i, element) {
       // Save an empty result object
       var result = {};
 
@@ -72,7 +66,7 @@ app.get("/scrape", function(req, res) {
 // Route for getting all Articles from the db
 app.get("/articles", function(req, res) {
   // Grab every document in the Articles collection
-  db.Scraper.find({})
+  db.Article.find({})
     .then(function(dbArticle) {
       // If we were able to successfully find Articles, send them back to the client
       res.json(dbArticle);
