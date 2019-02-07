@@ -8,6 +8,7 @@ In this assignment, you'll create a web app that lets users view and leave comme
 This application is deployed to Heroku and Github. 
    * https://mongoose-eats-cheerio-indeed.herokuapp.com/
    * https://plipandfirt.github.io/Scaper-HW/
+   * https://github.com/plipandfirt/Scaper-HW
 
 ## Instructions
 
