@@ -20,7 +20,7 @@ app.use(express.static("public"));
 app.engine("handlebars", expresshbs({ defaultLayout: 'main' }));
 
 // Connect to the Mongo DB
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/scraper"
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/scaper"
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 mongoose.set("useFindAndModify",false);
 
@@ -34,12 +34,12 @@ app.get("/scrape", function(req, res) {
     var $ = cheerio.load(response.data);
 
     // Now grab every jobsearch within the td tag - yeah right!!!
-    $("div#resultsColTopSpace").each(function(i, element) {
+    $("div#jobTitle.turnstileLink").each(function(i, element) {
       // Save an empty result object
       var result = {};
 
       // Add the text and href of every link, and save them as properties of the result object
-      result.title = $(this)
+      result.jobTitle = $(this)
         .children("a")
         .text();
       result.link = $(this)
